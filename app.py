@@ -32,6 +32,20 @@ def recommend(movie):
         recommended_movies_poster.append(fetch_movie_poster(movie_id))
     return recommended_movies,recommended_movies_poster
 
+
+def own_movie_picture(movie):
+   
+    movie_index=movies[movies['title']==movie].index[0]
+    distances=similarity[movie_index]
+    own_movie_tuple=sorted(list(enumerate(distances)),reverse=True,key=lambda x:x[1])[0]
+    movie_id=movies.iloc[own_movie_tuple[0]].movie_id
+    return fetch_movie_poster(movie_id)
+    
+
+
+
+
+
 # similarity=pickle.load(open('similarities.pkl','rb'))
 movies=pickle.load(open('movies.pkl','rb'))
 movies_list=movies['title'].values
@@ -41,6 +55,7 @@ st.title('Movie Recommendation System')
 selected_movie_name = st.selectbox(
     "Enter the movies that you want to watch",
     movies_list)
+st.image(own_movie_picture(selected_movie_name),width=200)
 
 if st.button("Recommend"):
     top_5_movies_recommended,top_5_movies_recommended_posters=recommend(selected_movie_name)
